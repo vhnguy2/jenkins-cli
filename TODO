@@ -1,0 +1,20 @@
+[x] Ability to modify slaves
+[x] Ability to disable/enable emails
+[x] Ability to set emails addresses
+[x] Ability to start the build for any task
+[x] Ability to list all failing jobs
+[x] Ability to retrieve details of a job (i.e. lastSuccessfulBuild, lastFailingBuild, currentStatus)
+[x] Ability to query queue and what is building
+[x] Ability to modify labels
+[x] Default to JENKINS_USER if it exists
+[] Grant users access to Jenkins
+[x] Stream the logs to the current console
+[] Output log to a file
+[x] Get build history for a job
+[x] Get build details
+Ability to query for machines with certain labels
+Ability to add a label to multiple machines
+Ability to add a label to multiple jobs
+
+
+

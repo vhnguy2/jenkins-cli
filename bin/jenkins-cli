@@ -1,0 +1,87 @@
+#!/usr/bin/env ruby
+
+require "trollop"
+require "#{File.dirname(__FILE__)}/../lib/jenkins_controller"
+
+DEFAULT_SSH_USER = "role-c3"
+DEFAULT_JENKINS_URL = "http://localhost:8080"
+
+usage = <<-EOF
+Usage:
+  jenkins-cli <command> [OPTIONS]
+Examples:
+  jenkins-cli list-failures
+  jenkins-cli disable-email --jenkins-url http://localhost:8080 --user jenkins --projects "sas-coverage rails-coverage"
+Supported Commands:
+  add-node [jenkins-url | user | name | ssh_user | mode | slave-url | v]
+  build-details [jenkins-url | user | job | build-number]
+  build-history [jenkins-url | user | job | limit]
+  disable-email [jenkins-url | user | projects]
+  enable-email [jenkins-url | user | projects | emails]
+  grant-access [jenkins-url | user | grant-user]
+  job-details [jenkins-url | user | job]
+  job-labels [jenkins-url | user | job | labels]
+  list-failures [jenkins-url | user]
+  list-jobs [jenkins-url | user]
+  log [jenkins-url | user | job]
+  queue [jenkins-url | user]
+  start-job [jenkins-url | user | job]
+EOF
+
+opts = Trollop::options do
+  banner usage
+  opt :name, "Slave name", :default => nil, :type => String, :short => "-n"
+  opt :user, "Jenkins username", :default => nil, :type => String, :short => "-u"
+  opt :password, "Jenkins password", :default => nil, :type => String
+  opt :ssh_user, "SSH username", :default => DEFAULT_SSH_USER
+  opt :jenkins_url, "Jenkins main URL", :default => nil, :type => String
+  opt :mode, "Jenkins slave mode", :default => "exclusive"
+  opt :slave_url, "Slave URL", :default => nil, :type => String
+  opt :verbose, "Verbose", :default => false, :short => "-v"
+  opt :projects, "Jenkins projects to disable emails from.", :default => nil, :type => String, :short => "-p"
+  opt :emails, "List of recipients to receive email.", :default => "", :type => String, :short => "-e"
+  opt :job, "Jenkins job", :default => nil, :type => String, :short => "-j"
+  opt :labels, "Jenkins label expression", :default => nil, :type => String
+  opt :grant_user, "Jenkins user to grant write permissions to.", :default => nil, :type => String
+  opt :build_number, "Build number of a particular Jenkins job.", :default => nil, :type => String, :short => "-b"
+  opt :limit, "The number of entries to show", :default => nil, :type => String, :short => "-l"
+end
+
+# If jenkins_url is not set then set it to JENKINS_URL env var if it exists
+opts[:jenkins_url] = ENV['JENKINS_URL'] if opts[:jenkins_url].nil?
+opts[:user] = ENV['JENKINS_USER'] if opts[:user].nil?
+opts[:password] = ENV['JENKINS_PASSWORD'] if opts[:password].nil?
+
+# Otherwise set it to DEFAULT_JENKINS_URL
+opts[:jenkins_url] = DEFAULT_JENKINS_URL if opts[:jenkins_url].nil?
+
+if ARGV[0] && ARGV[0] == "list-jobs"
+  JenkinsController.list_jobs(opts[:jenkins_url], opts[:user], opts[:password])
+elsif ARGV[0] && ARGV[0] == "disable-email"
+  JenkinsController.disable_email(opts[:jenkins_url], opts[:user], opts[:password], opts[:projects])
+elsif ARGV[0] && ARGV[0] == "enable-email"
+  JenkinsController.enable_email(opts[:jenkins_url], opts[:user], opts[:password], opts[:projects], opts[:emails])
+elsif ARGV[0] && ARGV[0] == "add-node"
+  JenkinsController.add_node(opts[:jenkins_url], opts[:user], opts[:password], opts[:name], opts[:ssh_user], opts[:mode], opts[:slave_url], opts[:v])
+elsif ARGV[0] && ARGV[0] == "start-job"
+  JenkinsController.start_job(opts[:jenkins_url], opts[:user], opts[:password], opts[:job])
+elsif ARGV[0] && ARGV[0] == "list-failures"
+  JenkinsController.list_failures(opts[:jenkins_url], opts[:user], opts[:password])
+elsif ARGV[0] && ARGV[0] == "job-details"
+  JenkinsController.job_details(opts[:jenkins_url], opts[:user], opts[:password], opts[:job])
+elsif ARGV[0] && ARGV[0] == "queue"
+  JenkinsController.queue(opts[:jenkins_url], opts[:user], opts[:password])
+elsif ARGV[0] && ARGV[0] == "job-labels"
+  JenkinsController.job_labels(opts[:jenkins_url], opts[:user], opts[:password], opts[:job], opts[:labels])
+elsif ARGV[0] && ARGV[0] == "grant-access"
+  JenkinsController.grant_access(opts[:jenkins_url], opts[:user], opts[:password], opts[:grant_user])
+elsif ARGV[0] && ARGV[0] == "log"
+  JenkinsController.log(opts[:jenkins_url], opts[:user], opts[:password], opts[:job])
+elsif ARGV[0] && ARGV[0] == "build-history"
+  JenkinsController.build_history(opts[:jenkins_url], opts[:user], opts[:password], opts[:job], opts[:limit])
+elsif ARGV[0] && ARGV[0] == "build-details"
+  JenkinsController.build_details(opts[:jenkins_url], opts[:user], opts[:password], opts[:job], opts[:build_number])
+else
+  puts usage
+  exit(1)
+end

@@ -1,0 +1,32 @@
+What does jenkins-cli do?
+==================================
+
+1. Allows you to modify Jenkins slave configurations
+2. Allows you to disable/enable emails if you're using the Ext-email plugin
+3. Start a build
+4. Lists all failing jobs
+5. Retrieve details pertaining to a Jenkins job (e.g. current build status, last successful, last failed, etc.)
+6. Ability to query for what is current building and pending
+7. Ability to modify Jenkins job labels
+8. Can retrieve the build history of a Jenkins job
+9. Retrieve details of a particular build (e.g. committers, SCM changes, etc.)
+10. Ability to stream logs of a currently building job. 
+
+How to install jenkins-cli
+==================================
+
+Add gems.sv2 to your gem sources
+  gem sources -a http://gems.sv2
+
+Install jenkins-cli into your gemset
+  gem install jenkins-cli
+
+Optionally set $JENKINS_URL to your Jenkins master machine. 
+Optionally set $JENKINS_USER to your Jenkins username you wish to operate as.
+
+How to use jenkins-cli
+=================================
+
+Usage: jenkins-cli <command> [OPTIONS]
+
+For a list of available commands just use type 'jenkins-cli' 
