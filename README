@@ -15,9 +15,6 @@ What does jenkins-cli do?
 How to install jenkins-cli
 ==================================
 
-Add gems.sv2 to your gem sources
-  gem sources -a http://gems.sv2
-
 Install jenkins-cli into your gemset
   gem install jenkins-cli
 
