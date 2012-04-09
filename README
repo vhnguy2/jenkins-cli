@@ -27,3 +27,22 @@ How to use jenkins-cli
 Usage: jenkins-cli <command> [OPTIONS]
 
 For a list of available commands just use type 'jenkins-cli' 
+
+Authors
+-------
+
+* Viet Nguyen
+* Noah Gibbs
+* Al Tobey
+
+Dependencies
+------------
+
+* Ruby 1.9 (tested on 1.9.2p290)
+* rainbow
+* ffi-rzmq (for Nodule::ZeroMQ, optional)
+
+License
+-------
+
+Nodule is released under [the MIT license](http://www.opensource.org/licenses/mit-license.php).
